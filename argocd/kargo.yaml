@@ -9,10 +9,15 @@ metadata:
   name: kargo-demo
   namespace: kargo-demo
 spec:
+  freightCreationPolicy: Automatic
+  interval: 5m0s
   subscriptions:
-  - image:
-      repoURL: ghcr.io/linuxcontainers/alpine
-      semverConstraint: ^3.0
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        strictSemvers: true
+        repoURL: ghcr.io/linuxcontainers/alpine
+        semverConstraint: ^3.0
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
