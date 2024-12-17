@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: kargo-demo
-  namespace: argocd-04204
+  namespace: kargo-demo
 spec:
   generators:
   - list:
