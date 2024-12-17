@@ -6,3 +6,8 @@ resources:
 - namespace.yaml
 - argocd.yaml
 - kargo.yaml
+- kargo-warehouses.yaml
+- kargo-stages.yaml
+- kargo-promotions.yaml
+- kargo-projects.yaml
+- kargo-freights.yaml
