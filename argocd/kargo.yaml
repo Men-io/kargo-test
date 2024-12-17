@@ -1,0 +1,89 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: kargo-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: kargo-demo
+  namespace: kargo-demo
+spec:
+  subscriptions:
+  - image:
+      repoURL: ghcr.io/linuxcontainers/alpine
+      semverConstraint: ^3.0
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: kargo-demo
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      direct: true
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/Men-io/kargo-test.git
+      writeBranch: main
+      kustomize:
+        images:
+        - image: ghcr.io/linuxcontainers/alpine
+          path: basic/stages/test
+    argoCDAppUpdates:
+    - appName: kargo-demo-test
+      appNamespace: kargo-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: uat
+  namespace: kargo-demo
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      stages:
+      - test
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/Men-io/kargo-test.git
+      writeBranch: main
+      kustomize:
+        images:
+        - image: ghcr.io/linuxcontainers/alpine
+          path: basic/stages/uat
+    argoCDAppUpdates:
+    - appName: kargo-demo-uat
+      appNamespace: kargo-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: kargo-demo
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      stages:
+      - uat
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/Men-io/kargo-test.git
+      writeBranch: main
+      kustomize:
+        images:
+        - image: ghcr.io/linuxcontainers/alpine
+          path: basic/stages/prod
+    argoCDAppUpdates:
+    - appName: kargo-demo-prod
+      appNamespace: kargo-demo

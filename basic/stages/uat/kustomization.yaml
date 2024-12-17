@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- applicationset-crd.yaml
-- namespace.yaml
-- argocd.yaml
-- kargo.yaml
+- ../../base
+images:
+- name: ghcr.io/linuxcontainers/alpine
+  newTag: "3.20"
